@@ -43,6 +43,15 @@ public:
         std::string command = "imagej " + getPath() + " &";
         system(command.data());
     }
+
+    /*!
+     * \brief showAttributes stores in a string the object's specific attributes
+        \return the string where the information is stored
+     */
+    std::string showAttributes() const override{
+        std::string out = "Photo name: " + this->getName() + ". Latitude: " + std::to_string(getLatitude()) + ", Longitude: " + std::to_string(getLongitude()) + ".";
+        return out;
+    }
 };
 
 #endif // PHOTO_H

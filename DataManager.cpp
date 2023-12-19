@@ -56,12 +56,13 @@ void DataManager::showGroupInfo(std::string name, std::ostream &o) const{
     groups.at(name)->showGroupInfo(o);
 }
 
-void DataManager::playMedia(std::string name) const{
+int DataManager::playMedia(std::string name) const{
     if(data.find(name) == data.end()){
         std::cerr << "The name doesn't exist\n";
-        return;
+        return -1;
     }
     data.at(name)->streamObject();
+    return 1;
 }
 
 void DataManager::destroyMedia(std::string name){
@@ -92,4 +93,13 @@ void DataManager::destroyGroup(std::string name){
     std::shared_ptr<Group> groupToDelete = groups.at(name);
     groups.erase(name);
     groupToDelete.reset(); //Destroys the object
+}
+
+std::string DataManager::showMediaAttributes(std::string name) const {
+    if(data.find(name) == data.end()){
+        std::string responseError = "Error, the media requested has not been found.";
+        return responseError;
+    }
+
+    return data.at(name)->showAttributes();
 }

@@ -35,8 +35,9 @@ public:
     /*!
      * \brief playMedia plays the media object with the correct name
      * \param name the name of the media
+     * \returns 1 if successful, -1 if not
      */
-    void playMedia(std::string name) const;
+    int playMedia(std::string name) const;
 
     /*!
      * \brief showGroupInfo shows the info of the group with the correct name
@@ -56,6 +57,13 @@ public:
      * \param name the name of the group
      */
     void destroyGroup(std::string name);
+
+    /*!
+     * \brief Returns the attributes of searched media
+     * \param name the name of the group
+     * \returns a string with the information inside it
+     */
+    std::string showMediaAttributes(std::string name) const; 
 };
 
 #endif // DATAMANAGER_H

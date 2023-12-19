@@ -38,6 +38,15 @@ public:
         std::string command = "mpv " + getPath() + " &";
         system(command.data());
     }
+
+    /*!
+     * \brief showAttributes stores in a string the object's specific attributes
+        \return the string where the information is stored
+     */
+    std::string showAttributes() const override{
+        std::string out = "Video name: " + this->getName() + ". Length: " + std::to_string(getLength()) + " minutes.";
+        return out;
+    }
 };
 
 #endif // VIDEO_H

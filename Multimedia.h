@@ -35,6 +35,12 @@ public:
      * \brief streamObject streams the object (shows the picture/play the video)
      */
     virtual void streamObject() const = 0;
+
+    /*!
+     * \brief showAttributes stores in a string the object's specific attributes
+        \return the string where the information is stored
+     */
+    virtual std::string showAttributes() const = 0;
 };
 
 #endif // Multimedia_H
