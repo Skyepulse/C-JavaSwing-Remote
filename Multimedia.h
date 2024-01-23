@@ -17,14 +17,31 @@ protected:
 
 public:
 
-    ~Multimedia()= default;
+    virtual ~Multimedia(){std::cout << "Multimedia Destroyed with name " << getName() << std::endl;};
 
     std::string getPath() const {return path;}
     std::string getName() const {return name;}
 
     void setPath(std::string path){this->path=path;}
     void setName(std::string name){this->name=name;}
+    virtual std::string getClassName() const = 0;
 
+    /*!
+     * \brief write writes the object in a file
+     * \param file ostream object
+     */
+    virtual void write(std::ostream& file){
+        file << name << "\n";
+        file << path << "\n";
+    };
+    /*!
+     * \brief read reads the object from a file
+     * \param file istream object
+     */
+    virtual void read(std::istream& file){
+        file >> name;
+        file >> path;
+    };
     /*!
      * \brief showNames shows the name and path of the object
      * \param os ostream object

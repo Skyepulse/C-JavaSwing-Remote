@@ -51,13 +51,13 @@ public:
      * \brief destroyMedia will destroy a Media object with the correct name
      * \param name the name of the media
      */
-    void destroyMedia(std::string name);
+    int destroyMedia(std::string name);
 
     /*!
      * \brief destroyGroup will destroy a Group object with the correct name
      * \param name the name of the group
      */
-    void destroyGroup(std::string name);
+    int destroyGroup(std::string name);
 
     /*!
      * \brief Returns the attributes of searched media

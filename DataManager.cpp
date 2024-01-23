@@ -85,10 +85,10 @@ int DataManager::playMedia(std::string name) const{
     return 1;
 }
 
-void DataManager::destroyMedia(std::string name){
+int DataManager::destroyMedia(std::string name){
     if(data.find(name) == data.end()){
         std::cerr << "The name doesn't exist no nee to destroy it\n";
-        return;
+        return -1;
     }
     std::shared_ptr<Multimedia> mediaToDelete = data.at(name);
     //We first need to take the media out of all the groups he is in. We iterate through each group and delete the media if it is in it
@@ -103,16 +103,18 @@ void DataManager::destroyMedia(std::string name){
     }
     data.erase(name);
     mediaToDelete.reset(); //Destroys the object
+    return 1;
 }
 
-void DataManager::destroyGroup(std::string name){
+int DataManager::destroyGroup(std::string name){
     if(groups.find(name) == groups.end()){
         std::cerr << "The group name doesn't exist no need to destroy it\n";
-        return;
+        return -1;
     }
     std::shared_ptr<Group> groupToDelete = groups.at(name);
     groups.erase(name);
     groupToDelete.reset(); //Destroys the object
+    return 1;
 }
 
 std::string DataManager::showMediaAttributes(std::string name) const {

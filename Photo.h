@@ -28,6 +28,30 @@ public:
     double getLatitude() const {return latitude;}
     double getLongitude() const {return longitude;}
 
+    std::string getClassName() const override{
+        return "Photo";
+    }
+
+    /*!
+     * \brief write writes the object in a file
+     * \param file ostream object
+     */
+    void write(std::ostream& file) override{
+        Multimedia::write(file);
+        file << latitude << "\n";
+        file << longitude << "\n";
+    }
+
+    /*!
+     * \brief read reads the object from a file
+     * \param file istream object
+     */
+    void read(std::istream& file) override{
+        Multimedia::read(file);
+        file >> latitude;
+        file >> longitude;
+    }
+    
     /*!
      * \brief showNames shows the name and path of the object plus the longitude and latitude
      * \param os ostream object

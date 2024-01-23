@@ -8,17 +8,18 @@
 class Film: public Video
 {
 private:
-    unsigned int* chaptersLength;
-    unsigned int numChapters;
+    unsigned int* chaptersLength{};
+    unsigned int numChapters{};
 
 
 
 protected:
-    Film():
-        chaptersLength(nullptr),numChapters(0){}
+    Film() = default;
 
-    Film(std::string name, std::string path, unsigned int length, unsigned int* chaptersLength, unsigned int numChapters):
-        Video{name, path, length}, chaptersLength{chaptersLength}, numChapters{numChapters}{}
+    Film(std::string name, std::string path, unsigned int length, const unsigned int* chaptersLength, unsigned int numChapters):
+        Video{name, path, length}{
+            setChapterLengths(chaptersLength, numChapters);
+        }
     friend class DataManager;
 
 public:
@@ -29,13 +30,40 @@ public:
     }
 
     //Constructor for copying the object
-    Film(const Film& copie): numChapters(copie.numChapters){
-        chaptersLength = new unsigned int[numChapters];
-        for(unsigned int i = 0; i < numChapters; i++)
-            chaptersLength[i] = copie.chaptersLength[i];
+    Film(const Film& copie): Video(copie){
+        setChapterLengths(copie.chaptersLength, copie.numChapters);
     }
 
-    void setChapterLengths(unsigned int* durations, unsigned int numC){
+    std::string getClassName() const override{
+        return "Film";
+    }
+
+    /*!
+     * \brief write writes the object in a file
+     * \param file ostream object
+     */
+    void write(std::ostream& file) override{
+        Video::write(file);
+        file << numChapters << "\n";
+        for(unsigned int i = 0; i < numChapters; i++)
+            file << chaptersLength[i] << "\n";
+    }
+
+    /*!
+     * \brief read reads the object from a file
+     * \param file istream object
+     */
+    void read(std::istream& file) override{
+        Video::read(file);
+        file >> numChapters;
+        chaptersLength = new unsigned int[numChapters];
+        for(unsigned int i = 0; i < numChapters; i++)
+            file >> chaptersLength[i];
+    }
+
+    void setChapterLengths(const unsigned int* durations, unsigned int numC){
+        if(chaptersLength == nullptr)
+            return;
         delete[] chaptersLength;
 
         if(durations == nullptr || numC == 0){

@@ -18,7 +18,7 @@ using namespace std;
 using MultimediaPointer = std::shared_ptr<Multimedia>;
 using GroupPointer = std::shared_ptr<Group>;
 
-const int PORT = 3332;
+const int PORT = 3331;
 
 int main()
 {
@@ -71,6 +71,16 @@ int main()
             size_t searchSubstring = request.find("search ");
             std::string name = request.substr(searchSubstring + 7);
             response = manager->searchMediaWithSubstring(name);
+        }else if(request.find("destroyMedia") == 0){
+            size_t destroySubstring = request.find("destroyMedia ");
+            std::string name = request.substr(destroySubstring + 13);
+            int number = manager->destroyMedia(name);
+            response = "Destroyed media successfully";
+        }else if(request.find("destroyGroup") == 0){
+            size_t destroySubstring = request.find("destroyGroup ");
+            std::string name = request.substr(destroySubstring + 13);
+            int number = manager->destroyGroup(name);
+            response = "Destroyed media successfully";
         }else {
             response = "The command you tried to execute does not exist in the current context of this Multimedia Server. To find a media and display its attributes write find ..., or play ... if you want to play it. To search all multimedia existing names write search, or search ... to find a multimedia containing a particulatr substring!";
             cout << "The command received is not recognized." << endl;

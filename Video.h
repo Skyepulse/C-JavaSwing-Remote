@@ -23,6 +23,27 @@ public:
     void setLength(int length){this->length=length;}
     int getLength() const {return length;}
 
+    std::string getClassName() const override{
+        return "Video";
+    }
+
+    /*!
+     * \brief write writes the object in a file
+     * \param file ostream object
+     */
+    void write(std::ostream& file) override{
+        Multimedia::write(file);
+        file << length << "\n";
+    }
+
+    /*!
+     * \brief read reads the object from a file
+     * \param file istream object
+     */
+    void read(std::istream& file) override{
+        Multimedia::read(file);
+        file >> length;
+    }
     /*!
      * \brief showNames shows the name and path of the object plus the length
      * \param os ostream object
