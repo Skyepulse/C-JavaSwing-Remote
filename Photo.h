@@ -21,7 +21,7 @@ protected:
     friend class DataManager;
 public:
 
-    ~Photo(){std::cout<<"Photo Destroyed\n";}
+    ~Photo() override {}
 
     void setLatitude(double latitude){this->latitude=latitude;}
     void setLongitude(double longitude){this->longitude=longitude;}

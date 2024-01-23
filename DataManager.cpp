@@ -1,43 +1,77 @@
 #include "DataManager.h"
 
-std::shared_ptr<Photo> DataManager::createPhoto(std::string name, std::string path, double latitude, double longitude){
+void DataManager::createPhoto(std::string name, std::string path, double latitude, double longitude){
     if(data.find(name) != data.end()){
         std::cerr << "The name already exists\n";
-        return nullptr;
+        return;
     }
     std::shared_ptr<Photo> photo = std::shared_ptr<Photo>(new Photo(name, path, latitude, longitude));
     data[name] = photo;
-    return photo;
 }
 
-std::shared_ptr<Video> DataManager::createVideo(std::string name, std::string path, unsigned int length){
+void DataManager::createVideo(std::string name, std::string path, unsigned int length){
     if(data.find(name) != data.end()){
         std::cerr << "The name already exists\n";
-        return nullptr;
+        return;
     }
     std::shared_ptr<Video> video = std::shared_ptr<Video>(new Video(name, path, length));
     data[name] = video;
-    return video;
 }
 
-std::shared_ptr<Film> DataManager::createFilm(std::string name, std::string path, unsigned int length, unsigned int* chaptersLength, unsigned int numChapters){
+void DataManager::createFilm(std::string name, std::string path, unsigned int length, unsigned int* chaptersLength, unsigned int numChapters){
     if(data.find(name) != data.end()){
         std::cerr << "The name already exists\n";
-        return nullptr;
+        return;
     }
     std::shared_ptr<Film> film = std::shared_ptr<Film>(new Film(name, path, length, chaptersLength, numChapters));
     data[name] = film;
-    return film;
 }
 
-std::shared_ptr<Group> DataManager::createGroup(std::string name){
+void DataManager::createGroup(std::string name){
     if(groups.find(name) != groups.end()){
         std::cerr << "The group name already exists\n";
-        return nullptr;
+        return;
     }
     std::shared_ptr<Group> group = std::shared_ptr<Group>(new Group(name));
     groups[name] = group;
-    return group;
+}
+
+void DataManager::addMediaToGroup(std::string mediaName, std::string groupName){
+    if(data.find(mediaName) == data.end()){
+        std::cerr << "The media name doesn't exist\n";
+        return;
+    }
+    if(groups.find(groupName) == groups.end()){
+        std::cerr << "The group name doesn't exist\n";
+        return;
+    }
+    //Also we check the media is not already in the group
+    for(auto i = groups[groupName]->begin(); i != groups[groupName]->end(); i++){
+        if((*i)->getName() == mediaName){
+            std::cerr << "The media is already in the group\n";
+            return;
+        }
+    }
+    groups[groupName]->push_back(data[mediaName]);
+}
+
+void DataManager::removeMediaFromGroup(std::string mediaName, std::string groupName){
+    if(data.find(mediaName) == data.end()){
+        std::cerr << "The media name doesn't exist\n";
+        return;
+    }
+    if(groups.find(groupName) == groups.end()){
+        std::cerr << "The group name doesn't exist\n";
+        return;
+    }
+    //We check if the media is in the Group that is a std::list<std::shared_ptr<MultiMedia>>
+    for(auto i = groups[groupName]->begin(); i != groups[groupName]->end(); i++){
+        if((*i)->getName() == mediaName){
+            groups[groupName]->erase(i);
+            return;
+        }
+    }
+    std::cerr << "The media exists but is not in the group mentioned. No deletion done.\n";
 }
 
 void DataManager::showMediaInfo(std::string name, std::ostream& o) const{

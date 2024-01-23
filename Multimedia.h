@@ -17,7 +17,7 @@ protected:
 
 public:
 
-    virtual ~Multimedia(){std::cout << "Multimedia Destroyed with name " << getName() << std::endl;};
+    virtual ~Multimedia(){std::cout << "Multimedia " << getName() << " has been destroyed."<< std::endl;};
 
     std::string getPath() const {return path;}
     std::string getName() const {return name;}

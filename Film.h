@@ -24,8 +24,7 @@ protected:
 
 public:
 
-    ~Film(){
-        std::cout << "Film Destroyed\n";
+    ~Film() override{
         delete[] chaptersLength;
     }
 
@@ -62,7 +61,7 @@ public:
     }
 
     void setChapterLengths(const unsigned int* durations, unsigned int numC){
-        if(chaptersLength == nullptr)
+        if(chaptersLength == durations)
             return;
         delete[] chaptersLength;
 
@@ -100,7 +99,7 @@ public:
         \return the string where the information is stored
      */
     std::string showAttributes() const override{
-        std::string out = "Photo name: " + this->getName() + ". Number of chapters: " + std::to_string(getNumChapters()) + ".";
+        std::string out = "Film name: " + this->getName() + ". Number of chapters: " + std::to_string(getNumChapters()) + ".";
         for(unsigned int i = 0; i < numChapters; i++)
             out += "Chapter " + std::to_string(i+1) + ": " + std::to_string(chaptersLength[i]) + " minutes. ";
         return out;

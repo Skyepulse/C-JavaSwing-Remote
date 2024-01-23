@@ -18,7 +18,7 @@ protected:
     friend class DataManager;
 
 public:
-    ~Video(){std::cout << "Video Destroyed\n";}
+    ~Video() override {}
 
     void setLength(int length){this->length=length;}
     int getLength() const {return length;}

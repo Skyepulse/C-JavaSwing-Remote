@@ -21,11 +21,25 @@ public:
     DataManager() = default;
     ~DataManager() = default;
 
-    std::shared_ptr<Photo> createPhoto(std::string name, std::string path, double latitude, double longitude);
-    std::shared_ptr<Video> createVideo(std::string name, std::string path, unsigned int length);
-    std::shared_ptr<Film> createFilm(std::string name, std::string path, unsigned int length, unsigned int* chaptersLength, unsigned int numChapters);
-    std::shared_ptr<Group> createGroup(std::string name);
+    void createPhoto(std::string name, std::string path, double latitude, double longitude);
+    void createVideo(std::string name, std::string path, unsigned int length);
+    void createFilm(std::string name, std::string path, unsigned int length, unsigned int* chaptersLength, unsigned int numChapters);
+    void createGroup(std::string name);
 
+    /*!
+     * \brief addMediaToGroup adds a media object to a group
+     * \param mediaName the name of the media
+     * \param groupName the name of the group
+     */
+    void addMediaToGroup(std::string mediaName, std::string groupName);
+
+    /*!
+     * \brief removeMediaFromGroup removes a media object from a group
+     * \param mediaName the name of the media
+     * \param groupName the name of the group
+     */
+    void removeMediaFromGroup(std::string mediaName, std::string groupName);
+    
     /*!
      * \brief showMediaInfo shows the info of the media object with the correct name
      * \param name the name of the media

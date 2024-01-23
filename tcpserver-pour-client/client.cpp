@@ -9,7 +9,7 @@
 #include "ccsocket.h"
 
 static const std::string HOST = "127.0.0.1";
-static const int PORT = 3331;
+static const int PORT = 3332;
 
 ///
 /// Lit une requete depuis le Terminal, envoie cette requete au serveur,

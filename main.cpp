@@ -18,7 +18,7 @@ using namespace std;
 using MultimediaPointer = std::shared_ptr<Multimedia>;
 using GroupPointer = std::shared_ptr<Group>;
 
-const int PORT = 3331;
+const int PORT = 3332;
 
 int main()
 {
@@ -35,20 +35,22 @@ int main()
 
     DataManager *manager = new DataManager();
     //Creation of a Photo and Video list
-    MultimediaPointer first = manager->createPhoto("Photo1",currentPathVar + "/testMedia/sample1.png", 3, 4);
-    MultimediaPointer second = manager->createVideo("Video1", currentPathVar +"/testMedia/sample-5s.mp4", 5);
-    MultimediaPointer third = manager->createPhoto("Photo2", currentPathVar +"/testMedia/sample2.jpeg ", 3, 4);
+    manager->createPhoto("Photo1",currentPathVar + "/testMedia/sample1.png", 3, 4);
+    manager->createVideo("Video1", currentPathVar +"/testMedia/sample-5s.mp4", 5);
+    manager->createPhoto("Photo2", currentPathVar +"/testMedia/sample2.jpeg ", 3, 4);
 
     //Creation of a FILM:
     unsigned int* chapters = new unsigned int[5]{1, 2, 3, 4, 5};
     manager->createFilm("Film1", currentPathVar +"/testMedia/sample-5s.mp4", 5, chapters, 5);
+    delete[] chapters;
 
     //Creation of a Group
-    GroupPointer group1 = manager->createGroup("Group1");
-    GroupPointer group2 = manager->createGroup("Group2");
-    group1->push_back(first);
-    group1->push_back(second);
-    group2->push_back(third);
+    manager->createGroup("Group1");
+    manager->createGroup("Group2");
+    manager->addMediaToGroup("Photo1", "Group1");
+    manager->addMediaToGroup("Video1", "Group1");
+    manager->addMediaToGroup("Photo2", "Group2");
+    manager->addMediaToGroup("Film1", "Group2");
     
 
    //Créer le tcpserver
@@ -56,9 +58,7 @@ int main()
         if(request.find("find") == 0){
             size_t findSubstring = request.find("find ");
             std::string media = request.substr(findSubstring + 5);
-
             response = manager->showMediaAttributes(media);
-
         } else if(request.find("play") == 0){
             size_t playSubstring = request.find("play ");
             std::string media = request.substr(playSubstring + 5);
@@ -74,13 +74,19 @@ int main()
         }else if(request.find("destroyMedia") == 0){
             size_t destroySubstring = request.find("destroyMedia ");
             std::string name = request.substr(destroySubstring + 13);
-            int number = manager->destroyMedia(name);
-            response = "Destroyed media successfully";
+            int success = manager->destroyMedia(name);
+            if(success < 0)
+                response = "Error, the media given does not exist";
+            else
+                response = "Destroyed media successfully";
         }else if(request.find("destroyGroup") == 0){
             size_t destroySubstring = request.find("destroyGroup ");
             std::string name = request.substr(destroySubstring + 13);
-            int number = manager->destroyGroup(name);
-            response = "Destroyed media successfully";
+            int success = manager->destroyGroup(name);
+            if(success < 0)
+                response = "Error, the group given does not exist";
+            else
+                response = "Destroyed media successfully";
         }else {
             response = "The command you tried to execute does not exist in the current context of this Multimedia Server. To find a media and display its attributes write find ..., or play ... if you want to play it. To search all multimedia existing names write search, or search ... to find a multimedia containing a particulatr substring!";
             cout << "The command received is not recognized." << endl;
@@ -89,6 +95,7 @@ int main()
         return true;
    });
 
+   
    cout << "Attention, starting server on port " << PORT << endl;
    int status = serveur->run(PORT);
 
@@ -96,6 +103,8 @@ int main()
     cerr << "Error when trying to initialize the server" << endl;
     return 1;
    }
-
+    
+    delete serveur;
+    delete manager;
     return 0;
 }
