@@ -9,6 +9,7 @@
 #include <map>
 #include <memory>
 #include <iostream>
+#include <sstream>
 
 class DataManager
 {
@@ -64,6 +65,13 @@ public:
      * \returns a string with the information inside it
      */
     std::string showMediaAttributes(std::string name) const; 
+
+    /*!
+     * \brief Returns the names of media with this substring in their name
+     * \param substring the substring
+     * \returns a string with the information inside it
+     */
+    std::string searchMediaWithSubstring(std::string substring) const;
 };
 
 #endif // DATAMANAGER_H

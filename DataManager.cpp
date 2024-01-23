@@ -48,6 +48,26 @@ void DataManager::showMediaInfo(std::string name, std::ostream& o) const{
     data.at(name)->showNames(o);
 }
 
+std::string DataManager::searchMediaWithSubstring(std::string substring) const{
+    std::stringstream resultStringStream;
+    resultStringStream << "Existing and accessible multimedia in the database so far: ";
+    bool firstFound = false;
+    for(const auto& pair: data){
+        const std::string& key = pair.first;
+        if (key.find(substring) != std::string::npos) {
+            if (firstFound) {
+                resultStringStream << ", ";
+            }
+            resultStringStream << key;
+            firstFound = true;
+        }
+    }
+    if(firstFound){
+        return resultStringStream.str();
+    }
+    return "No multimedia found with this substring!";
+}
+
 void DataManager::showGroupInfo(std::string name, std::ostream &o) const{
     if(groups.find(name) == groups.end()){
         std::cerr << "The group name doesn't exist\n";
