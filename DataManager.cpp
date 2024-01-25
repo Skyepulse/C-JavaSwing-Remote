@@ -159,3 +159,17 @@ std::string DataManager::showMediaAttributes(std::string name) const {
 
     return data.at(name)->showAttributes();
 }
+
+void DataManager::writeMedias(std::ostream& o) const{
+    for(auto i = data.begin(); i != data.end(); i++){
+        o << i->second->getClassName() << "\n";
+        i->second->write(o);
+    }
+}
+
+void DataManager::writeGroups(std::ostream& o) const{
+    for(auto i = groups.begin(); i != groups.end(); i++){
+        o << i->second->getClassName() << "\n";
+        i->second->write(o);
+    }
+}
