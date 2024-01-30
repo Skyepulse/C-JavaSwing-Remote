@@ -41,23 +41,31 @@ public:
      * \brief write writes the object in a file
      * \param file ostream object
      */
-    void write(std::ostream& file) override{
-        Video::write(file);
+    std::ostream& operator<<(std::ostream& file) override{
+        Video::operator<<(file);
         file << numChapters << "\n";
         for(unsigned int i = 0; i < numChapters; i++)
             file << chaptersLength[i] << "\n";
+        return file;
     }
 
     /*!
      * \brief read reads the object from a file
      * \param file istream object
      */
-    void read(std::istream& file) override{
-        Video::read(file);
-        file >> numChapters;
-        chaptersLength = new unsigned int[numChapters];
-        for(unsigned int i = 0; i < numChapters; i++)
-            file >> chaptersLength[i];
+    std::istream& operator>>(std::istream& file) override{
+        Video::operator>>(file);
+        std::string line;
+        std::getline(file, line);
+        unsigned int numC= std::stoi(line);
+        unsigned int* durations = new unsigned int[numC];
+        for(unsigned int i = 0; i < numChapters; i++){
+            std::getline(file, line);
+            durations[i] = std::stoi(line);
+        }
+        setChapterLengths(durations, numC);
+        delete[] durations;
+        return file;
     }
 
     void setChapterLengths(const unsigned int* durations, unsigned int numC){

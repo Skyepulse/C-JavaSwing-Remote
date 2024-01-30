@@ -28,8 +28,8 @@ public:
 
     void writeMedias(std::ostream& o) const;
     void writeGroups(std::ostream& o) const;
-    void readMedias(std::istream& i);
-    void readGroups(std::istream& i);
+    void readFactory(std::istream& i);
+    
     /*!
      * \brief addMediaToGroup adds a media object to a group
      * \param mediaName the name of the media

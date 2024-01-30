@@ -30,17 +30,19 @@ public:
      * \brief write writes the object in a file
      * \param file ostream object
      */
-    virtual void write(std::ostream& file){
+    virtual std::ostream& operator<<(std::ostream& file){
         file << name << "\n";
         file << path << "\n";
+        return file;
     };
     /*!
      * \brief read reads the object from a file
      * \param file istream object
      */
-    virtual void read(std::istream& file){
+    virtual std::istream& operator>>(std::istream& file){
         file >> name;
         file >> path;
+        return file;
     };
     /*!
      * \brief showNames shows the name and path of the object

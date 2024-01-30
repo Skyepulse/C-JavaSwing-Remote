@@ -30,23 +30,25 @@ public:
      * \brief write writes the object in a file
      * \param file ostream object
      */
-    void write(std::ostream& o) const {
+    std::ostream& operator<<(std::ostream& o) const {
         o << groupname << std::endl;
         if(this->empty())
             o << "Group is empty\n";
-        else
+        else{
             o<< this->size() << std::endl;
             for(auto i = this->begin(); i != this->end(); i++)
                 o << (*i)->getName() << std::endl;
+        }
+        return o;
     }
 
     /*!
      * \brief read reads the object from a file
      * \param file istream object
      */
-    void read(std::istream& i){
+    std::istream& operator>>(std::istream& i){
         i >> groupname;
-        std::string name;
+        return i;
     }
 
     /*!
@@ -60,6 +62,8 @@ public:
             for(auto i = this->begin(); i != this->end(); i++)
                 (*i)->showNames(o);
     }
+
+    std::string getName() const {return groupname;}
 };
 
 #endif // GROUP_H

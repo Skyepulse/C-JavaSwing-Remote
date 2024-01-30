@@ -95,9 +95,24 @@ int main()
                 return false; 
             }
             manager->writeMedias(file);
+            file << "Groups" << std::endl;
             manager->writeGroups(file);
             file.close();
             response = "Saved successfully";
+        } else if(request == "r"){
+            try
+            {
+                std::ifstream file("test.txt");
+                if (!file.is_open()) {
+                    std::cerr << "Failed to open save.txt for reading." << std::endl;
+                    return false; 
+                }
+                manager->readFactory(file);
+            } catch (const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+                return false;
+            }
         } else {
             response = "The command you tried to execute does not exist in the current context of this Multimedia Server. To find a media and display its attributes write find ..., or play ... if you want to play it. To search all multimedia existing names write search, or search ... to find a multimedia containing a particulatr substring!";
             cout << "The command received is not recognized." << endl;

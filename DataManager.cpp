@@ -163,13 +163,56 @@ std::string DataManager::showMediaAttributes(std::string name) const {
 void DataManager::writeMedias(std::ostream& o) const{
     for(auto i = data.begin(); i != data.end(); i++){
         o << i->second->getClassName() << "\n";
-        i->second->write(o);
+         i->second->operator<<(o);
     }
 }
 
 void DataManager::writeGroups(std::ostream& o) const{
     for(auto i = groups.begin(); i != groups.end(); i++){
         o << i->second->getClassName() << "\n";
-        i->second->write(o);
+        i->second->operator<<(o);
     }
+}
+
+void DataManager::readFactory(std::istream& file){
+    data.clear();
+    groups.clear();
+
+    std::string line;
+    while(line != "Groups" && !file.eof()){
+        std::getline(file, line);
+        if(line == "Photo"){
+            std::cout << "Photo found" << std::endl;
+            std::shared_ptr<Photo> photo = std::shared_ptr<Photo>(new Photo());
+            photo->operator>>(file);
+            data[photo->getName()] = photo;
+        }
+        else if(line == "Video"){
+            std::cout << "Video found" << std::endl;
+            std::shared_ptr<Video> video = std::shared_ptr<Video>(new Video());
+            video->operator>>(file);
+            data[video->getName()] = video;
+        }
+        else if(line == "Film"){
+            std::cout << "Film found" << std::endl;
+            std::shared_ptr<Film> film = std::shared_ptr<Film>(new Film());
+            film->operator>>(file);
+            data[film->getName()] = film;
+        }
+    }
+    while(!file.eof()){
+        std::getline(file, line);
+        if(line == "Group"){
+            std::shared_ptr<Group> group = std::shared_ptr<Group>(new Group());
+            group->operator>>(file);
+            groups[group->getName()] = group;
+            std::getline(file, line);
+            int numMedias = std::stoi(line);
+            for(int i = 0; i < numMedias; i++){
+                std::getline(file, line);
+                addMediaToGroup(line, group->getName());
+            }
+        }
+    }
+
 }

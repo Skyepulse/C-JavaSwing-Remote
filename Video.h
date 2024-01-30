@@ -31,18 +31,22 @@ public:
      * \brief write writes the object in a file
      * \param file ostream object
      */
-    void write(std::ostream& file) override{
-        Multimedia::write(file);
+    std::ostream& operator<<(std::ostream& file) override{
+        Multimedia::operator<<(file);
         file << length << "\n";
+        return file;
     }
 
     /*!
      * \brief read reads the object from a file
      * \param file istream object
      */
-    void read(std::istream& file) override{
-        Multimedia::read(file);
-        file >> length;
+    std::istream& operator>>(std::istream& file) override{
+        Multimedia::operator>>(file);
+        std::string line;
+        std::getline(file, line);
+        length = std::stoi(line);
+        return file;
     }
     /*!
      * \brief showNames shows the name and path of the object plus the length
