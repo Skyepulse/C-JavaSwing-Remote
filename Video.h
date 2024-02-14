@@ -43,9 +43,11 @@ public:
      */
     std::istream& operator>>(std::istream& file) override{
         Multimedia::operator>>(file);
+        std::cout << "/////////VIDEOREAD///////////" << std::endl;
         std::string line;
-        std::getline(file, line);
+        file >> line;
         length = std::stoi(line);
+        std::cout << "Length: " << length << std::endl;
         return file;
     }
     /*!

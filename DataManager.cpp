@@ -178,9 +178,12 @@ void DataManager::readFactory(std::istream& file){
     data.clear();
     groups.clear();
 
+    std::cerr << "Starting to read the file" << std::endl;
+
     std::string line;
     while(line != "Groups" && !file.eof()){
         std::getline(file, line);
+        std::cout << "I read: " << line << std::endl;
         if(line == "Photo"){
             std::cout << "Photo found" << std::endl;
             std::shared_ptr<Photo> photo = std::shared_ptr<Photo>(new Photo());
@@ -200,19 +203,39 @@ void DataManager::readFactory(std::istream& file){
             data[film->getName()] = film;
         }
     }
+    std::cout << "TRYING TO SEE IF DATA WAS SAVED SUCCESSFULY" << std::endl;
+    std::cout << "The data length is now: " << data.size() << std::endl;
+    for(const auto& pair:data){
+        std::cout << "Media name: " << pair.first << std::endl;
+    }
     while(!file.eof()){
+        std::cerr << "Reading groups" << std::endl;
         std::getline(file, line);
+        std::cout << "I read: " << line << std::endl;
         if(line == "Group"){
             std::shared_ptr<Group> group = std::shared_ptr<Group>(new Group());
             group->operator>>(file);
             groups[group->getName()] = group;
-            std::getline(file, line);
-            int numMedias = std::stoi(line);
-            for(int i = 0; i < numMedias; i++){
-                std::getline(file, line);
-                addMediaToGroup(line, group->getName());
+            std::string numMediasString;
+            file >> numMediasString;
+            std::cout << "Read as the numMediaString" << numMediasString << std::endl;
+            if(numMediasString == "GroupEmpty"){
+                std::cout<<"This group is empty! Going to next one" << std::endl;
+                continue;
             }
+            int numMedias = std::stoi(numMediasString);
+            for(int i = 0; i < numMedias; i++){
+                std::string mediaName;
+                file >> mediaName;
+                std::cout << "I am adding to this group the media" << mediaName << std::endl;
+                addMediaToGroup(mediaName, group->getName());
+            }
+            std::cout << "Finished for this group!" << std::endl;
         }
     }
-
+    std::cout << "MAKING SURE GROUPS ARE OK" << std::endl;
+    for(const auto& pair: groups){
+        pair.second->showGroupInfo(std::cout);
+    }
+    std::cout << "FINISHED ALL" << std::endl;
 }

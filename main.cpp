@@ -19,7 +19,7 @@ using namespace std;
 using MultimediaPointer = std::shared_ptr<Multimedia>;
 using GroupPointer = std::shared_ptr<Group>;
 
-const int PORT = 3332;
+const int PORT = 3334;
 
 int main()
 {
@@ -48,10 +48,13 @@ int main()
     //Creation of a Group
     manager->createGroup("Group1");
     manager->createGroup("Group2");
+    manager->createGroup("Group3");
+    manager->createGroup("Group4");
     manager->addMediaToGroup("Photo1", "Group1");
     manager->addMediaToGroup("Video1", "Group1");
     manager->addMediaToGroup("Photo2", "Group2");
     manager->addMediaToGroup("Film1", "Group2");
+    manager->addMediaToGroup("Film1", "Group4");
     
 
    //Créer le tcpserver
@@ -108,6 +111,7 @@ int main()
                     return false; 
                 }
                 manager->readFactory(file);
+                response = "Read successfully the file";
             } catch (const std::exception& e)
             {
                 std::cerr << e.what() << '\n';

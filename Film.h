@@ -55,15 +55,22 @@ public:
      */
     std::istream& operator>>(std::istream& file) override{
         Video::operator>>(file);
+        std::cerr << "/////////FILMREAD///////////" << std::endl;
         std::string line;
-        std::getline(file, line);
+        file >> line;
         unsigned int numC= std::stoi(line);
         unsigned int* durations = new unsigned int[numC];
-        for(unsigned int i = 0; i < numChapters; i++){
-            std::getline(file, line);
-            durations[i] = std::stoi(line);
+        std::cout << "numChapters before setting it: " << numC << std::endl;
+        for(unsigned int i = 0; i < numC; i++){
+            std::string chapterDuration;
+            file >> chapterDuration;
+            std::cout << "chapter" << i << "should last: " << chapterDuration << std::endl;
+            durations[i] = std::stoi(chapterDuration);
         }
+        std::cout << "Now we set them" << std::endl;
         setChapterLengths(durations, numC);
+        std::cout << "numChapters: " << numChapters << std::endl;
+        displayChapterDurations();
         delete[] durations;
         return file;
     }

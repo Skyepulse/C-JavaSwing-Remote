@@ -19,7 +19,7 @@ protected:
 
 public:
     ~Group(){
-        std::cout << "Group Destroyed, not its content!\n";
+        std::cout << groupname << " Destroyed, not its content!\n";
     }
 
     std::string getGroupName() const {return groupname;}
@@ -33,7 +33,7 @@ public:
     std::ostream& operator<<(std::ostream& o) const {
         o << groupname << std::endl;
         if(this->empty())
-            o << "Group is empty\n";
+            o << "GroupEmpty" << std::endl;
         else{
             o<< this->size() << std::endl;
             for(auto i = this->begin(); i != this->end(); i++)
@@ -47,7 +47,9 @@ public:
      * \param file istream object
      */
     std::istream& operator>>(std::istream& i){
+        std::cout << "//////////////////GROUPREAD//////////////////////" << std::endl;
         i >> groupname;
+        std::cout << "Group name: " << groupname << std::endl;
         return i;
     }
 

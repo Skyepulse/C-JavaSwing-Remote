@@ -40,8 +40,11 @@ public:
      * \param file istream object
      */
     virtual std::istream& operator>>(std::istream& file){
+        std::cout << "/////////MULTIMEDIAREAD///////////" << std::endl;
         file >> name;
+        std::cout << "Name: " << name << std::endl;
         file >> path;
+        std::cout << "Path: " << path << std::endl;
         return file;
     };
     /*!
