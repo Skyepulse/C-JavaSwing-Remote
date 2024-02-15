@@ -47,9 +47,7 @@ public:
      * \param file istream object
      */
     std::istream& operator>>(std::istream& i){
-        std::cout << "//////////////////GROUPREAD//////////////////////" << std::endl;
         i >> groupname;
-        std::cout << "Group name: " << groupname << std::endl;
         return i;
     }
 

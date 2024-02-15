@@ -90,8 +90,8 @@ int main()
             if(success < 0)
                 response = "Error, the group given does not exist";
             else
-                response = "Destroyed media successfully";
-        } else if(request == "t"){
+                response = "Destroyed group successfully";
+        } else if(request == "save"){
             std::ofstream file("test.txt");
             if (!file.is_open()) {
                 std::cerr << "Failed to open save.txt for writing." << std::endl;
@@ -102,7 +102,7 @@ int main()
             manager->writeGroups(file);
             file.close();
             response = "Saved successfully";
-        } else if(request == "r"){
+        } else if(request == "readSave"){
             try
             {
                 std::ifstream file("test.txt");
@@ -111,14 +111,14 @@ int main()
                     return false; 
                 }
                 manager->readFactory(file);
-                response = "Read successfully the file";
+                response = "Read successfully the file.";
             } catch (const std::exception& e)
             {
                 std::cerr << e.what() << '\n';
                 return false;
             }
         } else {
-            response = "The command you tried to execute does not exist in the current context of this Multimedia Server. To find a media and display its attributes write find ..., or play ... if you want to play it. To search all multimedia existing names write search, or search ... to find a multimedia containing a particulatr substring!";
+            response = "The command you tried to execute does not exist in the current context of this Multimedia Server. To find a media and display its attributes write find ..., or play ... if you want to play it. To search all multimedia existing names write search, or search ... to find a multimedia containing a particulatr substring! If you wish to destroy a Media from the database, type destroyMedia + the name of the media or destroyGroup + the name of the group. To save the current database information, type save. If you wish to reload the database from last save type readSave!";
             cout << "The command received is not recognized." << endl;
         }
 

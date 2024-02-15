@@ -49,15 +49,12 @@ public:
      */
     std::istream& operator>>(std::istream& file) override{
         Multimedia::operator>>(file);
-        std::cerr << "/////////PHOTOREAD///////////" << std::endl;
         std::string longline;
         std::string latline;
         file >> latline;
         latitude = std::stod(latline);
-        std::cout << "Latitude: " << latitude << std::endl;
         file >> longline;
         longitude = std::stod(longline);
-        std::cout << "Longitude: " << longitude << std::endl;
         return file;
     }
     
