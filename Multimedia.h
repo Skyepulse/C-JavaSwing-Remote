@@ -27,7 +27,7 @@ public:
     virtual std::string getClassName() const = 0;
 
     /*!
-     * \brief write writes the object in a file
+     * \brief writes the object in a file
      * \param file ostream object
      */
     virtual std::ostream& operator<<(std::ostream& file){
@@ -36,7 +36,7 @@ public:
         return file;
     };
     /*!
-     * \brief read reads the object from a file
+     * \brief reads the object from a file
      * \param file istream object
      */
     virtual std::istream& operator>>(std::istream& file){

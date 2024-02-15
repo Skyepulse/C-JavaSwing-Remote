@@ -1,0 +1,12 @@
+-Wall
+-g
+-MM
+DataManager.cpp
+Multimedia.cpp
+Video.cpp
+Photo.cpp
+Film.cpp
+Group.cpp
+tcpserver.cpp
+ccsocket.cpp
+main.cpp

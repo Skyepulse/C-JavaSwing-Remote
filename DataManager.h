@@ -28,6 +28,11 @@ public:
 
     void writeMedias(std::ostream& o) const;
     void writeGroups(std::ostream& o) const;
+
+    /*!
+     * \brief rebuilds the database from the last saveFile
+     *\param i the file we read the save from 
+     */
     void readFactory(std::istream& i);
     
     /*!
