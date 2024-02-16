@@ -15,7 +15,7 @@ Photo1
 4
 Photo
 Photo2
-/cal/exterieurs/mrios-22/INF224/TPC++/testMedia/sample2.jpeg 
+/cal/exterieurs/mrios-22/INF224/TPC++/testMedia/sample2.jpeg
 3
 4
 Video

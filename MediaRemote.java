@@ -13,9 +13,22 @@ public class MediaRemote extends JFrame {
     private JMenuBar menubar;
     private JMenu mainMenu;
     private JToolBar toolbar;
+
     private Action addAction1;
     private Action addAction2;
     private Action exitAction;
+
+    private JTextField inputField;
+    private Action searchAction;
+    private Action playAction;
+    private Action displayInfoAction;
+    private Action deleteMediaAction;
+    private Action deleteGroupAction;
+    private Action saveAction;
+    private Action loadAction;
+
+    //Miscellaneous
+    private final String NEW_REQUEST_LINE = "//////////////////////////NEW REQUEST/////////////////////////\n";
 
     //Client components
     static final String DEFAULT_HOST = "localhost";
@@ -69,14 +82,58 @@ public class MediaRemote extends JFrame {
         add(scrollPane, "Center");
 
         //We define the actions
-        addAction1 = new AddTextAction("Button 1", "Button 1 was pressed\n");
-        addAction2 = new AddTextAction("Button 2", "Button 2 was pressed\n");
+        addAction1 = new AddTextAction("Add space", "\n");
+        addAction2 = new AbstractAction("Reset Text Area"){
+           @Override 
+            public void actionPerformed(ActionEvent e) {
+                mainTextArea.setText("");
+            } 
+        };
         exitAction = new AbstractAction("Exit") {
            @Override 
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         };
+
+        //We define the actions for the other buttons
+        searchAction = new SendServerAction("Search For Media", "search");
+        playAction = new SendServerAction("Play Media", "play");
+        displayInfoAction = new SendServerAction("Display Media Info", "find");
+        deleteMediaAction = new SendServerAction("Delete Media", "destroyMedia");
+        deleteGroupAction = new SendServerAction("Delete Group", "destroyGroup");
+        saveAction = new SendServerSimpleMessage("Save", "save");
+        loadAction = new SendServerSimpleMessage("Load", "readSave");
+
+        //We first instanciate a JPanel with a BorderLayout
+        JPanel rightPanel = new JPanel(new BorderLayout(5, 5));
+        //We add a JPanel containing a vertical layout with a label and the textField at the north of the panel
+        JPanel inputPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+        inputPanel.add(new JLabel("Enter the desired request addition:"));
+        inputField = new JTextField();
+        inputPanel.add(inputField);
+        rightPanel.add(inputPanel, "North");
+        //Now we add a JPanel with a 2X3 GridLayout containing the buttons
+        JPanel requestsPanel = new JPanel(new GridLayout(3, 2, 5, 5));
+        requestsPanel.add(new JButton(searchAction));
+        requestsPanel.add(new JButton(displayInfoAction));
+        JButton deleteMediaButton = new JButton(deleteMediaAction);
+        deleteMediaButton.setBackground(Color.RED);
+        JButton deleteGroupButton = new JButton(deleteGroupAction);
+        deleteGroupButton.setBackground(Color.RED);
+        requestsPanel.add(deleteMediaButton);
+        requestsPanel.add(deleteGroupButton);
+        requestsPanel.add(new JButton(saveAction));
+        requestsPanel.add(new JButton(loadAction));
+        rightPanel.add(requestsPanel, "Center");
+        //Finally we add the play button at the south of the panel
+        rightPanel.add(new JButton(playAction), "South");
+        add(rightPanel, "East");
+
+
+        
+
+        
 
         //We add three buttons inside a JPanel south of the frame
         JPanel buttonPanel = new JPanel();
@@ -166,5 +223,41 @@ public class MediaRemote extends JFrame {
         public void actionPerformed(ActionEvent e) {
             mainTextArea.append(textToAdd);
         }
+    }
+
+    class SendServerAction extends AbstractAction{
+        private String actionText;
+
+        public SendServerAction(String name, String text){
+            super(name);
+            this.actionText = text;
+        }
+
+       @Override
+        public void actionPerformed(ActionEvent e) {
+            String mainString = actionText + " " + inputField.getText();
+            mainTextArea.append(NEW_REQUEST_LINE);
+            mainTextArea.append("REQUEST: " + mainString + "\n");
+            String response = send(mainString);
+            mainTextArea.append("RESPONSE: " + response + "\n");
+        } 
+    }
+
+    class SendServerSimpleMessage extends AbstractAction{
+        private String actionText;
+
+        public SendServerSimpleMessage(String name, String text){
+            super(name);
+            this.actionText = text;
+        }
+
+       @Override
+        public void actionPerformed(ActionEvent e) {
+            String mainString = actionText;
+            mainTextArea.append(NEW_REQUEST_LINE);
+            mainTextArea.append("REQUEST: " + mainString + "\n");
+            String response = send(mainString);
+            mainTextArea.append("RESPONSE: " + response + "\n");
+        } 
     }
 }
