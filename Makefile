@@ -2,85 +2,107 @@
 #
 #  Exemple de Makefile
 #  Eric Lecolinet - Reda Dehak - Telecom ParisTech 2015
-#  INF224 - TP C++ - http://www.telecom-paristech.fr/~elc/inf224
+#  INF224 - TP C++ et Java Swing - http://www.telecom-paristech.fr/~elc/inf224
 #
 ##########################################
 
 #
-# Nom du programme
+# Nom du programme C++
 #
-PROG = myprog
+PROG_CPP = myprog
 
 #
-# Fichiers sources (NE PAS METTRE les .h ni les .o seulement les .cpp)
+# Nom du programme Java
 #
-SOURCES = DataManager.cpp Multimedia.cpp Video.cpp Photo.cpp Film.cpp Group.cpp tcpserver.cpp ccsocket.cpp main.cpp
+PROG_JAVA = MediaRemote
 
 #
-# Fichiers objets (ne pas modifier sauf si l'extension n'est pas .cpp)
+# Fichiers sources C++ (NE PAS METTRE les .h ni les .o seulement les .cpp)
 #
-OBJETS = ${SOURCES:%.cpp=%.o}
+SOURCES_CPP = DataManager.cpp Multimedia.cpp Video.cpp Photo.cpp Film.cpp Group.cpp tcpserver.cpp ccsocket.cpp main.cpp
 
 #
-# Compilateur C++
+# Fichiers sources Java
+#
+SOURCES_JAVA = MediaRemote.java
+
+#
+# Fichiers objets C++ (ne pas modifier sauf si l'extension n'est pas .cpp)
+#
+OBJETS = ${SOURCES_CPP:%.cpp=%.o}
+
+#
+# Compilateur C++ et Java
 #
 CXX = c++
+JAVAC = javac
 
 #
 # Options du compilateur C++
 #   -g pour debugger, -O optimise, -Wall affiche les erreurs, -I pour les headers
 #   -std=c++11 pour C++11
-# Exemple: CXXFLAGS= -std=c++11 -Wall -O -I/usr/local/qt/include
 #
 CXXFLAGS = -std=c++11 -Wall -g
 
 #
-# Options de l'editeur de liens
+# Options de l'editeur de liens C++
 #
 LDFLAGS = 
 
 #
-# Librairies a utiliser
-# Exemple: LDLIBS = -L/usr/local/qt/lib -lqt
+# Librairies a utiliser avec C++
 #
 LDLIBS = -lpthread
 
+#
+# Options du compilateur Java
+#
+JAVAFLAGS =
+
 ##########################################
 #
-# Regles de construction/destruction des .o et de l'executable
-# depend-${PROG} sera un fichier contenant les dependances
+# Regles de construction/destruction des executables
+# depend-${PROG_CPP} sera un fichier contenant les dependances C++
 #
- 
-all: ${PROG}
 
-run: ${PROG}
-	./${PROG}
+all: cpp java
 
-${PROG}: depend-${PROG} ${OBJETS}
+cpp: ${PROG_CPP}
+
+java: $(SOURCES_JAVA)
+	$(JAVAC) $(JAVAFLAGS) $(SOURCES_JAVA)
+
+cppRun: ${PROG_CPP}
+	./${PROG_CPP}
+
+javaRun: java
+	java ${PROG_JAVA}
+
+${PROG_CPP}: depend-${PROG_CPP} ${OBJETS}
 	${CXX} -o $@ ${CXXFLAGS} ${LDFLAGS} ${OBJETS} ${LDLIBS}
 
 clean:
-	-@$(RM) *.o depend-${PROG} core 1>/dev/null 2>&1
+	-@$(RM) *.o *.class depend-${PROG_CPP} core 1>/dev/null 2>&1
 
 clean-all: clean
-	-@$(RM) ${PROG} 1>/dev/null 2>&1
-  
-tar:
-	tar cvf ${PROG}.tar.gz ${SOURCES}
+	-@$(RM) ${PROG_CPP} ${PROG_JAVA}.class 1>/dev/null 2>&1
 
-# Gestion des dependances : creation automatique des dependances en utilisant 
+tar:
+	tar cvf ${PROG_CPP}.tar.gz ${SOURCES_CPP}
+	tar cvf ${PROG_JAVA}.tar.gz ${SOURCES_JAVA}
+
+# Gestion des dependances C++ : creation automatique des dependances en utilisant 
 # l'option -MM de g++ (attention tous les compilateurs n'ont pas cette option)
 #
-depend-${PROG}:
-	${CXX} ${CXXFLAGS} -MM ${SOURCES} > depend-${PROG}
-
+depend-${PROG_CPP}:
+	${CXX} ${CXXFLAGS} -MM ${SOURCES_CPP} > depend-${PROG_CPP}
 
 ###########################################
 #
 # Regles implicites
 #
 
-.SUFFIXES: .cpp .cxx .c
+.SUFFIXES: .cpp .cxx .c .java
 
 .cpp.o:
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $@ $<
@@ -89,11 +111,10 @@ depend-${PROG}:
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $@ $<
 
 .c.o:
-	$(CC) -c (CFLAGS) $(INCPATH) -o $@ $<
-
+	$(CC) -c $(CFLAGS) $(INCPATH) -o $@ $<
 
 #############################################
 #
-# Inclusion du fichier des dependances
+# Inclusion du fichier des dependances C++
 #
--include depend-${PROG}
+-include depend-${PROG_CPP}
