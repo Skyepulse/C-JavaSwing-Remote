@@ -17,6 +17,7 @@ public class MediaRemote extends JFrame {
     private Action addAction1;
     private Action addAction2;
     private Action exitAction;
+    private Action instructionsAction;
 
     private JTextField inputField;
     private Action searchAction;
@@ -29,6 +30,21 @@ public class MediaRemote extends JFrame {
 
     //Miscellaneous
     private final String NEW_REQUEST_LINE = "//////////////////////////NEW REQUEST/////////////////////////\n";
+    private final String INSTRUCTIONS = """
+            ////////////////////////////INSTRUCTIONS/////////////////////////
+            Welcome to the MediaRemote application. This application allows you to interact with a media server.
+            You can use the buttons to send requests to the server, and receive the response in the text area.
+            The instructions for the buttons are as follows: \n
+            - Search: Searches for available media that have the given text in their name. If empty, returns all media. \n
+            - Play: Plays the media with the given name. Please be aware that the name must be exact. \n
+            - Display Media Info: Displays the information of the media with the given name. \n
+            - Delete Media: Deletes the media with the given name. CAREFUL: if a media is deleted before the database is saved,
+            it will be lost forever. \n
+            - Delete Group: Deletes the group with the given name. Same warning as the Delete Media button. \n
+            - Save: Saves the current state of the database. \n
+            - Load: Loads the last saved state of the database. \n
+            ////////////////////////////END OF INSTRUCTIONS////////////////////\n
+            """;
 
     //Client components
     static final String DEFAULT_HOST = "localhost";
@@ -92,16 +108,20 @@ public class MediaRemote extends JFrame {
         exitAction = new AbstractAction("Exit") {
            @Override 
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                //We open a dialog box to confirm the exit
+                int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION);
+                if (response == JOptionPane.YES_OPTION)
+                     System.exit(0);
             }
         };
+        instructionsAction = new AddTextAction("Instructions", INSTRUCTIONS);
 
         //We define the actions for the other buttons
         searchAction = new SendServerAction("Search For Media", "search");
         playAction = new SendServerAction("Play Media", "play");
         displayInfoAction = new SendServerAction("Display Media Info", "find");
-        deleteMediaAction = new SendServerAction("Delete Media", "destroyMedia");
-        deleteGroupAction = new SendServerAction("Delete Group", "destroyGroup");
+        deleteMediaAction = new SendServerActionDialogBox("Delete Media", "destroyMedia", "Enter the name of the media you are CERTAIN you wish to delete: ");
+        deleteGroupAction = new SendServerActionDialogBox("Delete Group", "destroyGroup", "Enter the name of the group you are CERTAIN you wish to delete: ");
         saveAction = new SendServerSimpleMessage("Save", "save");
         loadAction = new SendServerSimpleMessage("Load", "readSave");
 
@@ -139,6 +159,7 @@ public class MediaRemote extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(new JButton(addAction1));
         buttonPanel.add(new JButton(addAction2));
+        buttonPanel.add(new JButton(instructionsAction));
         buttonPanel.add(new JButton(exitAction));
         add(buttonPanel, "South");
 
@@ -148,6 +169,7 @@ public class MediaRemote extends JFrame {
         menubar.add(mainMenu);
         mainMenu.add(addAction1);
         mainMenu.add(addAction2);
+        mainMenu.add(instructionsAction);
         mainMenu.addSeparator();
         mainMenu.add(exitAction);
         setJMenuBar(menubar);
@@ -156,6 +178,7 @@ public class MediaRemote extends JFrame {
         toolbar = new JToolBar();
         toolbar.add(addAction1);
         toolbar.add(addAction2);
+        toolbar.add(instructionsAction);
         toolbar.addSeparator();
         toolbar.add(exitAction);
         add(toolbar, "North");
@@ -236,6 +259,28 @@ public class MediaRemote extends JFrame {
        @Override
         public void actionPerformed(ActionEvent e) {
             String mainString = actionText + " " + inputField.getText();
+            mainTextArea.append(NEW_REQUEST_LINE);
+            mainTextArea.append("REQUEST: " + mainString + "\n");
+            String response = send(mainString);
+            mainTextArea.append("RESPONSE: " + response + "\n");
+        } 
+    }
+
+    class SendServerActionDialogBox extends AbstractAction{
+        private String actionText;
+        private String dialogText;
+
+        public SendServerActionDialogBox(String name, String text, String dialogText){
+            super(name);
+            this.actionText = text;
+            this.dialogText = dialogText;
+        }
+
+       @Override
+        public void actionPerformed(ActionEvent e) {
+            String mainString = JOptionPane.showInputDialog(dialogText);
+            if (mainString == null) return;
+            mainString = actionText + " " + mainString;
             mainTextArea.append(NEW_REQUEST_LINE);
             mainTextArea.append("REQUEST: " + mainString + "\n");
             String response = send(mainString);
