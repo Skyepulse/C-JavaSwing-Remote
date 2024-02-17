@@ -212,6 +212,9 @@ public class MediaRemote extends JFrame {
         
     }
 
+    //Sends a request to the server, and returns the answer sent by the server.
+    //@params request, the string sent to the server.
+    //@returns the answer from the server
     public String send(String request) {
         // Send request to server
         try {
@@ -234,6 +237,8 @@ public class MediaRemote extends JFrame {
         }
     }
 
+    //This class adds text to the maintextArea
+    //@params text, the text to append to the main text area.
     class AddTextAction extends AbstractAction {
         private String textToAdd;
 
@@ -248,6 +253,9 @@ public class MediaRemote extends JFrame {
         }
     }
 
+    //This class sends the server a request + what is contained in the input field.
+    //Used for request that require a specific media name.
+    //@params text, the first part of the sent request that will be followed by user input.
     class SendServerAction extends AbstractAction{
         private String actionText;
 
@@ -263,9 +271,13 @@ public class MediaRemote extends JFrame {
             mainTextArea.append("REQUEST: " + mainString + "\n");
             String response = send(mainString);
             mainTextArea.append("RESPONSE: " + response + "\n");
+            inputField.setText("");
         } 
     }
 
+    //This class sends the server a request with an additional dialogbox to confirm the deletion of a media or group.
+    //@params text, the request part of the string
+    //@params dialogText, the text that will appear in the dialogBox
     class SendServerActionDialogBox extends AbstractAction{
         private String actionText;
         private String dialogText;
@@ -285,9 +297,12 @@ public class MediaRemote extends JFrame {
             mainTextArea.append("REQUEST: " + mainString + "\n");
             String response = send(mainString);
             mainTextArea.append("RESPONSE: " + response + "\n");
+            inputField.setText("");
         } 
     }
 
+    //This class sends to the server a single message entirely contained in one string
+    //@params text, the entire request to be sent.
     class SendServerSimpleMessage extends AbstractAction{
         private String actionText;
 
@@ -303,6 +318,7 @@ public class MediaRemote extends JFrame {
             mainTextArea.append("REQUEST: " + mainString + "\n");
             String response = send(mainString);
             mainTextArea.append("RESPONSE: " + response + "\n");
+            inputField.setText("");
         } 
     }
 }
