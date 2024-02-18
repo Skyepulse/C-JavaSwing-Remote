@@ -97,3 +97,20 @@ On trouve que les deux adresses sont différentes.
 
 
 
+/////////////////////////////////////////////////INSTRUCTIONS POUR LANCER LES PROGRAMMES//////////////////////////////////////////////////
+Il faut faire attention a lancer le serveur avant la telecommande !!
+Pour lancer le serveur:
+1-Aller dans le repertoire cpp
+2-mettre en ligne de commande make run 
+
+Pour lancer la telecommande:
+1-Aller dans le repertoire swing
+2-mettre en ligne de commande make run
+
+Pour clean totalement les deux repertoires, mettre make clean-all dans chaque repertoire!
+
+Le fichier test.txt est le fichier ou se sauvegarde l'etat de la base de données lors du save et ce que lira la base de données lors du readSave.
+Les programmes ont ete testes et devraient marcher sur linux d'une machine de l'ecole!
+
+Il se peut que parfois un depend-myprog empecher de clean ou build correctement la partie cpp, il faut dans ce cas simplement le supprimer!
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
