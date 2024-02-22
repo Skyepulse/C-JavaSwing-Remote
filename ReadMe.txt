@@ -1,116 +1,21 @@
----------------------------------QUESTIONS POUR PROJET INF224--------------------------------------------
+# C++/JavaSwing socket communication Media remote
 
-******TP1******:
-4/ On apelle les methodes sans implementations dans la classe de base des methodes virtuelles.
-Il ne sera plus possible d'instancier après l'implémentation basique de Video et Photo des objets de la classe de base car cette classe devient virtuelle. 
+> This project is an implementation of a C++ media database and javaSwing remote communicating with the database in a client/server socket based communication. 
 
-5/ On peut utiliser le polymorphisme pour instancier des objets derivant de la même classe, et si la methode abstraite existe dans la classe parent alors les classes filles appelleront les classes overrided.
-Dans le cas du c++ on doit instancier ainsi: ClassePere *objet = new classeFille1(); si on a un tableau de ClassePere*. Faire attention a bien creer un tableau avec des pointeurs et non les objets car ainsi on peut utiliser tous les avantages du Polymorphisme. Si les objets sont de grande taille, faire une liste d'objets et non de pointeurs peut prendre beaucoup de place...
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Current Version](https://img.shields.io/badge/version-1.0.1-green.svg)](https://github.com/yourusername/projectname)
 
-6/ Pour le tableau d'entiers pour la durée des chapitres, on peut utiliser unsigned int* chapterLengths pour stocker le pointeur vers le tableau. Pour le get, il suffit d'utiliser const unsigned int* getChapterLengths() const pour empecher la modification des données. Pour le set, il faut passer en argument un nouveau pointeur et la taille du tableau, puis detruire l'ancien tableau et en creer un nouveau a partir des valeurs du tableau dont le pointeur est en argument! Ne pas oublier de set le pointeur a nullptr si on initialise sans valeurs.
-Voici l'implémentation: 
+## About this project
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef FILM_H
-#define FILM_H
-#include "Video.h"
-#include <iostream>
-#include <string>
-#include <vector>
+The project was done in the context of the INF224 C++ and Java coding paradigms course at Télécom Paris. It aims at creating an effective and well structure media database using all the best convention for OOP in C++ and a simple user interface with javaSwing. It also aims at better understanding TCP socket client/server communication and building in parallel two applications with separate makefiles.
 
-class Film: public Video
-{
-private:
-    unsigned int* chaptersLength;
-    unsigned int numChapters;
+## How to build it
 
-public:
-    Film():
-        chaptersLength(nullptr),numChapters(0){}
+In order to build this project and test it, try the following steps:
+1- Clone this repository on a Linux machine that can compile C++ and has Java installed.
+2- Go to the c++ repository and type the command "make run".
+3- Go to the swing repository and type "make run".
 
-    Film(std::string name, std::string path, unsigned int length, unsigned int* chaptersLength, unsigned int numChapters):
-        Video{name, path, length}, chaptersLength{chaptersLength}, numChapters{numChapters}{}
-    ~Film(){
-        std::cout << "Film Destroyed\n";
-        delete[] chaptersLength;
-    }
+To clean everything, please type the "make clean-all" command in both repositories. It will clean the executables and the .class / .o files of the project.
 
-    void setChapterLengths(unsigned int* durations, unsigned int numC){
-        delete[] chaptersLength;
-
-        if(durations == nullptr || numC == 0){
-            chaptersLength = nullptr;
-            numChapters = 0;
-            return;
-        }
-        chaptersLength = new unsigned int[numC];
-        numChapters = numC;
-        for(unsigned int i = 0; i < numC; i++)
-            this->chaptersLength[i] = durations[i];
-    }
-
-
-    const unsigned int* getChapterLengths() const {
-        return chaptersLength;
-    }
-
-    unsigned int getNumChapters() const {
-        return numChapters;
-    }
-
-    /*!
-     * \brief displayChapterDurations displays the duration of each chapter
-     */
-    void displayChapterDurations() const{
-        for(unsigned int i = 0; i < numChapters; i++)
-            std::cout << "Chapter " << (i+1) << ": " << chaptersLength[i] << " minutes. ";
-        std::cout << std::endl;
-    }
-};
-
-
-#endif // FILM_H
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-7/ Il faut faire attention à modifier FILM parceque il faut detruire le tableau des chapitres dans son destructeur.
-Si on copie un objet avec des pointeurs comme variable d'instance, on ne copie pas les objets pointés mais les pointeurs ce qui fait que les deux objets vont posseder des variables d'instance qui pointent vers le même objet pointé initialement (le même espace mémoire). Voici une solution: on peut réecrire un constructeur qui a en argument un autre objet de la même classe et pour chaque variable d'instance pointeur initialiser un nouveau pointeur avec des mêmes données mais pour le coup pas le même espace mémoire!
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Constructor for copying the object
-    Film(const Film& copie): numChapters(copie.numChapters){
-        chaptersLength = new unsigned int[numChapters];
-        for(unsigned int i = 0; i < numChapters; i++)
-            chaptersLength[i] = copie.chaptersLength[i];
-    }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Ici, si on essaye de faire ceci:
-    Film *film = new Film("Film1", "D:\\WAMP\\www\\media\\videoRobot2.mp4", 5, chapters, 5);
-    Film *film2 = new Film(*film);
-    cout << film->getChapterLengths() << " " << film2->getChapterLengths() << endl;
-On trouve que les deux adresses sont différentes.
-
-8/La liste Group qui herite de std::list<Multimedia*> est bien une liste de pointeurs car par convention en c++, cela permet d'éviter des memory leak et des tailles de list grandes si les objets sont volumineux.
-
-9/Attention la classe Group dérive donc maintenant de std::list<std::shared_ptr<Multimedia>>.
-
-10/ POur ne pouvoir construire des objets Multimedia et Groupe que a partir de cette nouvelle classe, il suffit de mettre les constructeurs des Multimedia et Objet en protected et mettre en friend class MyClass où MyClass est la seule classe qui a accès aux constructeurs avec les classes enfant bien sûr. Aussi, vu que l'on utilise shared_ptr<> on doit créer une fonction dans chaque classe qui crée l'objet et renvoie un shared_ptr que seulement la classe qui gère toutes les structures peut appeler (en la mettant private par exemple avec la classe qui gère les structures en friend).
-
-
-
-/////////////////////////////////////////////////INSTRUCTIONS POUR LANCER LES PROGRAMMES//////////////////////////////////////////////////
-Il faut faire attention a lancer le serveur avant la telecommande !!
-Pour lancer le serveur:
-1-Aller dans le repertoire cpp
-2-mettre en ligne de commande make run 
-
-Pour lancer la telecommande:
-1-Aller dans le repertoire swing
-2-mettre en ligne de commande make run
-
-Pour clean totalement les deux repertoires, mettre make clean-all dans chaque repertoire!
-
-Le fichier test.txt est le fichier ou se sauvegarde l'etat de la base de données lors du save et ce que lira la base de données lors du readSave.
-Les programmes ont ete testes et devraient marcher sur linux d'une machine de l'ecole!
-
-Il se peut que parfois un depend-myprog empecher de clean ou build correctement la partie cpp, il faut dans ce cas simplement le supprimer!
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+WARNING: a rogue depend-myprog file may stop the build process with an error. If this happens please delete the file and it should work as usual. 
