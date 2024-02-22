@@ -12,9 +12,9 @@ The project was done in the context of the INF224 C++ and Java coding paradigms 
 ## How to build it
 
 In order to build this project and test it, try the following steps:
-1- Clone this repository on a Linux machine that can compile C++ and has Java installed.
-2- Go to the c++ repository and type the command "make run".
-3- Go to the swing repository and type "make run".
+1. Clone this repository on a Linux machine that can compile C++ and has Java installed.
+2. Go to the c++ repository and type the command "make run".
+3. Go to the swing repository and type "make run".
 
 To clean everything, please type the "make clean-all" command in both repositories. It will clean the executables and the .class / .o files of the project.
 
